@@ -11,6 +11,14 @@ const VocabularyModel = {
     return res.rows[0];
   },
 
+  async getByCategoryKey(category_key) {
+    const res = await pool.query(
+      'SELECT * FROM vocabulary WHERE category_key = $1 ORDER BY id ASC',
+      [category_key]
+    );
+    return res.rows;
+  },
+
   async create(data) {
     const {
       kanji, kana, romaji, meaning, jlpt_level,

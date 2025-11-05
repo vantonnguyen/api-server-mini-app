@@ -19,6 +19,16 @@ const VocabularyController = {
     }
   },
 
+  async getByCategory(req, res) {
+    try {
+      const key = req.params.key;
+      const vocabularies = await VocabularyModel.getByCategoryKey(key);
+      res.json({ success: true, data: vocabularies });
+    } catch (err) {
+      res.status(500).json({ success: false, message: err.message });
+    }
+  },
+
   async create(req, res) {
     try {
       const vocabulary = await VocabularyModel.create(req.body);
