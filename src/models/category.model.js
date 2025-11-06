@@ -1,13 +1,15 @@
-const { pool } = require('../config/db');
+const { pool } = require("../config/db");
 
 const CategoryModel = {
   async getAll() {
-    const res = await pool.query('SELECT * FROM category ORDER BY id ASC');
+    const res = await pool.query("SELECT * FROM category ORDER BY id ASC");
     return res.rows;
   },
 
   async getByKey(key) {
-    const res = await pool.query('SELECT * FROM category WHERE key = $1', [key]);
+    const res = await pool.query("SELECT * FROM category WHERE key = $1", [
+      key,
+    ]);
     return res.rows[0];
   },
 
@@ -31,7 +33,7 @@ const CategoryModel = {
   },
 
   async delete(key) {
-    await pool.query('DELETE FROM category WHERE key=$1', [key]);
+    await pool.query("DELETE FROM category WHERE key=$1", [key]);
     return true;
   },
 };

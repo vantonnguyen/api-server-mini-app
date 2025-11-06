@@ -12,7 +12,16 @@ const categoryRoutes = require('./routes/category.routes');
 const vocabularyRoutes = require('./routes/vocabulary.routes');
 const favoriteRoutes = require('./routes/favorite.routes');
 const progressRoutes = require('./routes/progress.routes');
-
+const cors = require('cors');
+app.use(cors({
+  origin: [
+    'http://localhost:3001',
+    'https://h5.zdn.vn',
+    'https://mini.zalo.me'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
 // Register middleware early so they run for all routes (morgan must go before route handlers)
 app.use(morgan('combined'))
 app.use(express.urlencoded({ extended: true }))

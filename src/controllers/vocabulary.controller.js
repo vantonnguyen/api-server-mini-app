@@ -1,12 +1,16 @@
-const VocabularyModel = require('../models/vocabulary.model');
+const VocabularyModel = require("../models/vocabulary.model");
 
 const VocabularyController = {
   async getAll(req, res) {
     try {
-      const vocabularies = await VocabularyModel.getAll();
+      const { category } = req.query; // lấy query param ?category=
+      const vocabularies = await VocabularyModel.getAll(category);
       res.json({ success: true, data: vocabularies });
     } catch (err) {
-      res.status(500).json({ success: false, message: err.message });
+      console.error("Error in getAll:", err);
+      res
+        .status(500)
+        .json({ success: false, message: "Internal server error" });
     }
   },
 
@@ -21,7 +25,7 @@ const VocabularyController = {
 
   async getByCategory(req, res) {
     try {
-      const key = req.params.key;
+      const key = req.query.category; // lấy theo query param ?category=fruits
       const vocabularies = await VocabularyModel.getByCategoryKey(key);
       res.json({ success: true, data: vocabularies });
     } catch (err) {
@@ -50,11 +54,11 @@ const VocabularyController = {
   async delete(req, res) {
     try {
       await VocabularyModel.delete(req.params.id);
-      res.json({ success: true, message: 'Vocabulary deleted' });
+      res.json({ success: true, message: "Vocabulary deleted" });
     } catch (err) {
       res.status(500).json({ success: false, message: err.message });
     }
-  }
+  },
 };
 
 module.exports = VocabularyController;
