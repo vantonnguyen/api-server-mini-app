@@ -1,6 +1,20 @@
 const ZaloUserModel = require('../models/zaloUser.model');
+const zaloUserService = require('../services/zaloUser.service');
 
 const ZaloUserController = {
+  async syncUser(req, res) {
+    const { accessToken, phoneToken } = req.body;
+    if (!accessToken || !phoneToken) {
+      return res.status(400).json({ success: false, message: 'accessToken and phoneToken are required.' });
+    }
+    try {
+      const user = await zaloUserService.getUserInfoAndSave(accessToken, phoneToken);
+      res.json({ success: true, data: user });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  },
+
   async getAll(req, res) {
     try {
       const users = await ZaloUserModel.getAll();
@@ -12,7 +26,7 @@ const ZaloUserController = {
 
   async getByZaloId(req, res) {
     try {
-      const user = await ZaloUserModel.getByZaloId(req.params.zaloId);
+      const user = await ZaloUserModel.findByZaloId(req.params.zaloId);
       res.json({ success: true, data: user });
     } catch (err) {
       res.status(500).json({ success: false, message: err.message });
@@ -30,7 +44,7 @@ const ZaloUserController = {
 
   async update(req, res) {
     try {
-      const user = await ZaloUserModel.update(req.params.zaloId, req.body);
+      const user = await ZaloUserModel.update(req.params.id, req.body);
       res.json({ success: true, data: user });
     } catch (err) {
       res.status(500).json({ success: false, message: err.message });
