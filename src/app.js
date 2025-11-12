@@ -2,6 +2,7 @@ const path = require('path')
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
+const session = require('express-session')
 // express-handlebars v6+/v8 exports an `engine` function — import it by name
 const { engine: exphbsEngine } = require('express-handlebars')
 const port = 3000
@@ -12,16 +13,29 @@ const categoryRoutes = require('./routes/category.routes');
 const vocabularyRoutes = require('./routes/vocabulary.routes');
 const favoriteRoutes = require('./routes/favorite.routes');
 const progressRoutes = require('./routes/progress.routes');
+const authRoutes = require('./routes/auth.routes');
 const cors = require('cors');
 app.use(cors({
   origin: [
     'http://localhost:3001',
     'https://h5.zdn.vn',
-    'https://mini.zalo.me'
+    'https://mini.zalo.me',
+    'http://localhost:5173'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
+// Đăng ký express-session trước các route
+app.use(session({
+  secret: process.env.SESSION_SECRET, // Đổi thành secret thực tế
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: false, // Để true nếu dùng HTTPS
+    maxAge: 24 * 60 * 60 * 1000 // 1 ngày
+  }
+}))
 // Register middleware early so they run for all routes (morgan must go before route handlers)
 app.use(morgan('combined'))
 app.use(express.urlencoded({ extended: true }))
@@ -33,6 +47,7 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/vocabularies', vocabularyRoutes);
 app.use('/api/favorites', favoriteRoutes);
 app.use('/api/progress', progressRoutes);
+app.use('/api/auth', authRoutes);
 
 // Register the handlebars engine correctly (use the exported `engine`)
 app.engine('hbs', exphbsEngine({
