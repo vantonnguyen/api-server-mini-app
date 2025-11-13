@@ -39,8 +39,12 @@ const CategoryController = {
 
   async delete(req, res) {
     try {
-      await CategoryModel.delete(req.params.key);
-      res.json({ success: true, message: 'Category deleted' });
+      const result = await CategoryModel.delete(req.params.key);
+      if (result) {
+        res.json({ success: true, message: 'Category deleted' });
+      } else {
+        res.status(404).json({ success: false, message: 'Category not found' });
+      }
     } catch (err) {
       res.status(500).json({ success: false, message: err.message });
     }

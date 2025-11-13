@@ -33,7 +33,7 @@ app.use(session({
   cookie: {
     httpOnly: true,
     secure: false, // Để true nếu dùng HTTPS
-    maxAge: 24 * 60 * 60 * 1000 // 1 ngày
+    maxAge: 30 * 24 * 60 * 60 * 1000 // 30 ngày
   }
 }))
 // Register middleware early so they run for all routes (morgan must go before route handlers)
