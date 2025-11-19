@@ -11,7 +11,6 @@ const AuthController = {
       if (!account) {
         return res.status(401).json({ success: false, message: 'Invalid username or password.' });
       }
-      // Lưu thông tin đăng nhập vào session
       req.session.admin = {
         id: account.id,
         user_name: account.user_name,
@@ -19,7 +18,7 @@ const AuthController = {
         email: account.email,
         phone_number: account.phone_number
       };
-      // Trả về thông tin tài khoản (có thể loại bỏ password trước khi trả về)
+      
       const { password: _, ...accountInfo } = account;
       res.json({ success: true, data: accountInfo });
     } catch (err) {

@@ -7,6 +7,19 @@ const CategoryModel = {
     return res.rows;
   },
 
+  async getPaged(page, pageSize) {
+    const offset = (page - 1) * pageSize;
+    const dataRes = await pool.query(
+      "SELECT * FROM category ORDER BY id ASC LIMIT $1 OFFSET $2",
+      [pageSize, offset]
+    );
+    const totalRes = await pool.query("SELECT COUNT(*) FROM category");
+    return {
+      data: dataRes.rows,
+      total: parseInt(totalRes.rows[0].count),
+    };
+  },
+
   async getByKey(key) {
     const res = await pool.query("SELECT * FROM category WHERE key = $1", [
       key,
@@ -14,7 +27,7 @@ const CategoryModel = {
     return res.rows[0];
   },
 
-  async create({ key, label, color, japanese, kana, romaji, display_order }) {
+  async add({ key, label, color, japanese, kana, romaji, display_order }) {
     const res = await pool.query(
       `INSERT INTO category (key, label, color, japanese, kana, romaji, display_order)
        VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
@@ -34,7 +47,11 @@ const CategoryModel = {
   },
 
   async delete(key) {
-    if (( await this.getByKey(key).length) === 0 || await this.getByKey(key) == null || await this.getByKey(key) == undefined) {
+    if (
+      (await this.getByKey(key).length) === 0 ||
+      (await this.getByKey(key)) == null ||
+      (await this.getByKey(key)) == undefined
+    ) {
       console.log("Category not found");
       return false;
     } else {

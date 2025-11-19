@@ -3,8 +3,15 @@ const CategoryModel = require('../models/category.model');
 const CategoryController = {
   async getAll(req, res) {
     try {
-      const categories = await CategoryModel.getAll();
-      res.json({ success: true, data: categories });
+      const page = parseInt(req.query.page);
+      const pageSize = parseInt(req.query.pageSize);
+      if (page && pageSize) {
+        const { data, total } = await CategoryModel.getPaged(page, pageSize);
+        res.json({ success: true, data, total });
+      } else {
+        const categories = await CategoryModel.getAll();
+        res.json({ success: true, data: categories });
+      }
     } catch (err) {
       res.status(500).json({ success: false, message: err.message });
     }
@@ -19,9 +26,13 @@ const CategoryController = {
     }
   },
 
-  async create(req, res) {
+  async add(req, res) {
     try {
-      const category = await CategoryModel.create(req.body);
+      const existed = await CategoryModel.getByKey(req.body.key);
+      if (existed) {
+        return res.status(409).json({ success: false, message: 'Duplicate key: category already exists.' });
+      }
+      const category = await CategoryModel.add(req.body);
       res.status(201).json({ success: true, data: category });
     } catch (err) {
       res.status(500).json({ success: false, message: err.message });

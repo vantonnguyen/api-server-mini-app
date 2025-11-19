@@ -28,27 +28,25 @@ app.use(
     credentials: true,
   })
 );
-// Đăng ký express-session trước các route
+
 app.use(
   session({
-    secret: process.env.SESSION_SECRET, // Đổi thành secret thực tế
+    secret: process.env.SESSION_SECRET, 
     resave: false,
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: false, // ✅ vì HTTPS
+      secure: false, // HTTPS
       sameSite: "lax", // không cần none vì cùng là HTTP
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 ngày
     },
   })
 );
 
-// Register middleware early so they run for all routes (morgan must go before route handlers)
 app.use(morgan("combined"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Mount API routes after middleware
 app.use("/api/users", userRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/vocabularies", vocabularyRoutes);
@@ -56,7 +54,6 @@ app.use("/api/favorites", favoriteRoutes);
 app.use("/api/progress", progressRoutes);
 app.use("/api/auth", authRoutes);
 
-// Register the handlebars engine correctly (use the exported `engine`)
 app.engine(
   "hbs",
   exphbsEngine({

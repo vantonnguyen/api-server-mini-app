@@ -16,6 +16,19 @@ const VocabularyModel = {
     return result.rows;
   },
 
+  async getPaged(page, pageSize) {
+    const offset = (page - 1) * pageSize;
+    const dataRes = await pool.query(
+      "SELECT * FROM vocabulary ORDER BY id ASC LIMIT $1 OFFSET $2",
+      [pageSize, offset]
+    );
+    const totalRes = await pool.query("SELECT COUNT(*) FROM vocabulary");
+    return {
+      data: dataRes.rows,
+      total: parseInt(totalRes.rows[0].count),
+    };
+  },
+
   async getById(id) {
     const res = await pool.query("SELECT * FROM vocabulary WHERE id = $1", [
       id,

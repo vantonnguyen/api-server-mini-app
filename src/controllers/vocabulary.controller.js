@@ -3,14 +3,17 @@ const VocabularyModel = require("../models/vocabulary.model");
 const VocabularyController = {
   async getAll(req, res) {
     try {
-      const { category } = req.query; // lấy query param ?category=
-      const vocabularies = await VocabularyModel.getAll(category);
-      res.json({ success: true, data: vocabularies });
+      const page = parseInt(req.query.page);
+      const pageSize = parseInt(req.query.pageSize);
+      if (page && pageSize) {
+        const { data, total } = await VocabularyModel.getPaged(page, pageSize);
+        res.json({ success: true, data, total });
+      } else {
+        const vocabularies = await VocabularyModel.getAll();
+        res.json({ success: true, data: vocabularies });
+      }
     } catch (err) {
-      console.error("Error in getAll:", err);
-      res
-        .status(500)
-        .json({ success: false, message: "Internal server error" });
+      res.status(500).json({ success: false, message: err.message });
     }
   },
 
