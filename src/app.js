@@ -46,7 +46,7 @@ app.use(morgan("combined"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use("/api/users", userRoutes);
+app.use("/api/zalo-users", userRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/vocabularies", vocabularyRoutes);
 app.use("/api/favorites", favoriteRoutes);

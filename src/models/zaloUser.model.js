@@ -30,8 +30,8 @@ const ZaloUserModel = {
     return res.rows[0];
   },
 
-  async delete(zalo_id) {
-    await pool.query('DELETE FROM zalo_user WHERE zalo_id=$1', [zalo_id]);
+  async delete(id) {
+    await pool.query('DELETE FROM zalo_user WHERE id=$1', [id]);
     return true;
   },
 };
