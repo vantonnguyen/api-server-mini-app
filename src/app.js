@@ -12,7 +12,6 @@ const userRoutes = require("./routes/user.routes");
 const categoryRoutes = require("./routes/category.routes");
 const vocabularyRoutes = require("./routes/vocabulary.routes");
 const favoriteRoutes = require("./routes/favorite.routes");
-const progressRoutes = require("./routes/progress.routes");
 const authRoutes = require("./routes/auth.routes");
 const cors = require("cors");
 app.use(
@@ -36,8 +35,8 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: false, // HTTPS
-      sameSite: "lax", // không cần none vì cùng là HTTP
+      secure: false, 
+      sameSite: "lax", 
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 ngày
     },
   })
@@ -51,7 +50,6 @@ app.use("/api/users", userRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/vocabularies", vocabularyRoutes);
 app.use("/api/favorites", favoriteRoutes);
-app.use("/api/progress", progressRoutes);
 app.use("/api/auth", authRoutes);
 
 app.engine(
